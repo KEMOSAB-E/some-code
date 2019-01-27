@@ -1,5 +1,13 @@
 const isObject = x => typeof x === 'object' && x != null;
-
+const find =(arr,item)=> {
+    for (let i = 0; i < arr.length; i++) {
+        if (item === arr[i].source) {
+            return arr[i]
+        }
+        
+    }
+    return null
+}
 
 
 
@@ -79,17 +87,7 @@ export function cloneDeep3(source,uniqueList) {
             
         }
     }
-    return target;
-
-    function find(arr,item) {
-        for (let i = 0; i < arr.length; i++) {
-            if (item === arr[i].source) {
-                return arr[i]
-            }
-            
-        }
-        return null
-    }
+    return target;    
 }
 //Symbol处理 Object.getOwnPropertySymbols
 export function cloneDeep4(source,hash = new WeakMap()) {
@@ -161,6 +159,49 @@ export function cloneDeep6(source) {
             break;
         }
         hash.set(data,res)
+
+        for (const k in data) {
+            if (data.hasOwnProperty(k)) {
+               if (isObject(data[k])) {
+                   loopList.push({
+                       parent:res,
+                       key:k,
+                       data:data[k]
+                   })
+               } else {
+                   res[k] = data[k];
+               }
+                
+            }
+        }
+    }
+    return root;
+}
+export function cloneDeep7(source){
+    const root = {};
+    const uniqueList = [];
+    const loopList=[{
+        parent:root,
+        key:undefined,
+        data:source
+    }]
+    while (loopList.length) {
+        const node = loopList.pop();
+        const {parent,key,data} = node;
+
+        let res = parent;
+        if (typeof key != undefined) {
+            res = parent[key] = {};
+        }
+        let uniqueData = find(uniqueList,data);
+        if (uniqueData) {
+            parent[key] = uniqueData.target;
+            break
+        }
+        uniqueList.push({
+            source:data,
+            target:res
+        })
 
         for (const k in data) {
             if (data.hasOwnProperty(k)) {
