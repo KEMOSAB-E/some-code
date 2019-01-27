@@ -6,12 +6,23 @@
 </template>
 
 <script>
+import {cloneDeep6} from "./public/deep-clone.js"
 import HelloWorld from "./components/HelloWorld.vue";
 
 export default {
   name: "app",
   components: {
     HelloWorld
+  },
+  mounted () {
+    var b = 1;
+var a = {a1: b, a2: b};
+
+a.a1 === a.a2 // true
+a.aa=a;
+var c = cloneDeep6(a);
+//console.log(c.a1 === c.a2 )// true
+//console.log(cloneDeep6(a))
   }
 };
 </script>
